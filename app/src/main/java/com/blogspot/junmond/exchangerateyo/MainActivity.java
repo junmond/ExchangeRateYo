@@ -1,10 +1,14 @@
 package com.blogspot.junmond.exchangerateyo;
 
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.provider.DocumentsContract;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -31,11 +35,7 @@ public class MainActivity extends AppCompatActivity {
         moneyManager = new ExchangeRateManager();
         moneyManager.getExchangeRateData();
 
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(1234)
-                        .setContentTitle("My notification")
-                        .setContentText("Hello World!");
+
 
 
     }

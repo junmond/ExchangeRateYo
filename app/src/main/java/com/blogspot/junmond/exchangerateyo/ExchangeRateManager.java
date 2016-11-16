@@ -1,5 +1,6 @@
 package com.blogspot.junmond.exchangerateyo;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
@@ -23,9 +24,10 @@ public class ExchangeRateManager {
     private String htmlPageUrl =  "http://fx.keb.co.kr/FER1101C.web";
     private TextView textviewHtmlDocument;
     private String htmlContentInStringFormat;
+    private Context parentContext = null;
 
-    public ExchangeRateManager(){
-
+    public ExchangeRateManager(Context parent){
+        this.parentContext = parent;
     }
 
     private boolean isInCurrencyList(String CurrencyName)
@@ -59,8 +61,6 @@ public class ExchangeRateManager {
                     {
                         continue;
                     }
-
-                    //Log.d("htmlJun", "tr tag : " + tr.html());
 
                     String CurrencyName = aTag.text();
 
