@@ -1,8 +1,14 @@
 package com.blogspot.junmond.exchangerateyo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.jsoup.Jsoup;
@@ -10,7 +16,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 /**
  * Created by HyunjunLee on 2016-11-14.
@@ -18,16 +29,139 @@ import java.io.IOException;
 
 public class ExchangeRateManager {
 
-    private String CurrencyList[] = {"USD", "EUR", "JPY", "CNY", "GBP", "CAD", "CHF", "HKD", "SEK", "AUD", "DKK", "NOK", "SAR", "KWD", "BHD", "AED", "SGD",
+    public static String CurrencyList[] = {"USD", "EUR", "JPY", "CNY", "GBP", "CAD", "CHF", "HKD", "SEK", "AUD", "DKK", "NOK", "SAR", "KWD", "BHD", "AED", "SGD",
                                 "MYR", "NZD", "THB", "IDR", "ZAR", "RUB", "VND", "PHP", "MXN", "BRL", "HUF", "PLN", "TRY", "CZK"};
 
-    private String htmlPageUrl =  "http://fx.keb.co.kr/FER1101C.web";
-    private TextView textviewHtmlDocument;
-    private String htmlContentInStringFormat;
-    private Context parentContext = null;
+    private ArrayList<MoneyList.moneyList> lists;
+    private Notifier notifier = null;
 
-    public ExchangeRateManager(Context parent){
-        this.parentContext = parent;
+    private String htmlPageUrl =  "http://fx.keb.co.kr/FER1101C.web";
+    private String alertFileName = "alertList";
+    private String alertString = "";
+    private Context parentContext = null;
+    private Activity parentActivity = null;
+
+    public ExchangeRateManager(Activity activity, Context context){
+        this.parentActivity = activity;
+        this.parentContext = context;
+        notifier = new Notifier(context);
+    }
+
+    public void addAlert(String currencyName, String standardName, String price)
+    {
+        // save to file
+        String addString = "";
+        addString += (currencyName + "\t");
+        addString += (standardName + "\t");
+        addString += (price + "@");
+
+        String writeString = "";
+
+        if(alertString == null)
+        {
+            writeString = addString;
+        }
+        else
+        {
+            writeString = alertString + addString;
+        }
+
+        try
+        {
+            OutputStreamWriter osw = new OutputStreamWriter(parentContext.openFileOutput(alertFileName, parentContext.MODE_PRIVATE));
+            // write buffer
+            osw.write(writeString);
+            Log.d("addAlert", "string added(" + writeString + ")");
+            osw.close();
+            alertString = writeString;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void showAlertList()
+    {
+        String output = null;
+
+        notifier.NotifyToUser("test Title", "test Text");
+
+        try
+        {
+            InputStream inputStream = parentContext.openFileInput(alertFileName);
+
+            if( inputStream != null) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString);
+                }
+                inputStream.close();
+
+                output = stringBuilder.toString();
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return;
+        }
+
+        if(output.length() < 5)
+        {
+            Log.d("showAlertList", "output is too short, len : " + output.length());
+            return;
+        }
+        alertString = output;
+        //alertString.split("\n");
+
+        if(alertString == null)
+        {
+            return;
+        }
+
+        final ArrayList<MoneyList.alertList> alertLists = new ArrayList<MoneyList.alertList>();
+
+        for(String str : alertString.split("@"))
+        {
+            MoneyList.alertList item = new MoneyList.alertList();
+
+            String currencyName = str.split("\t")[0];
+            String standardName = str.split("\t")[1];
+            String priceValue = str.split("\t")[2];
+
+            item.currencyName = currencyName;
+            item.standardName = standardName;
+            item.priceValue = priceValue;
+
+            alertLists.add(item);
+
+            Log.d("ReadAlert", "currency : " + currencyName + ", standard : " + standardName + ", price : " + priceValue);
+        }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                parentActivity.runOnUiThread(new Runnable(){
+                    @Override
+                    public void run() {
+                        ListView listView = (ListView)parentActivity.findViewById(R.id.lstAlert);
+                        listView.setAdapter(new AlertListAdapter(parentContext, alertLists));
+                    }
+                });
+            }
+        }).start();
+    }
+
+    public void deleteAlertList()
+    {
+        Log.d("deleteAlertList", "delete : " + alertFileName);
+        parentContext.deleteFile(alertFileName);
+        alertString = null;
     }
 
     private boolean isInCurrencyList(String CurrencyName)
@@ -46,7 +180,16 @@ public class ExchangeRateManager {
         jsoupAsyncTask.execute();
     }
 
+    public void ShowMoney()
+    {
+        ArrayList<MoneyList.moneyList> moneyLists = lists;
+    }
+
+
     private void getDataViaJSOUP(){
+
+        final ArrayList<MoneyList.moneyList> moneyLists = new ArrayList<MoneyList.moneyList>();
+
         try {
             Document doc = Jsoup.connect(htmlPageUrl).userAgent("Mozilla").get();
             Elements es = doc.getElementsByClass("tbl_list_type2");
@@ -77,17 +220,41 @@ public class ExchangeRateManager {
                     String sending = tds.get(5).text();
                     String receiving = tds.get(6).text();
 
+                    MoneyList.moneyList item = new MoneyList.moneyList();
+
+                    item.currencyName = CurrencyName;
+                    item.buying = buying;
+                    item.selling = selling;
+                    item.sending = sending;
+                    item.receiving = receiving;
+
                     Log.d("htmlJun", "currency : " + CurrencyName);
                     Log.d("htmlJun", "price : " + buying + ", " + selling + ", " + sending + ", " + receiving);
                     Log.d("htmlJun", "--------------------------");
 
-                    htmlContentInStringFormat += (tr.html().toString());
+                    moneyLists.add(item);
                 }
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                parentActivity.runOnUiThread(new Runnable(){
+                    @Override
+                    public void run() {
+                        ListView listView = (ListView)parentActivity.findViewById(R.id.lstCustom);
+                        listView.setAdapter(new ExchangeRateAdapter(parentContext, moneyLists));
+                    }
+                });
+            }
+        }).start();
+
     }
 
     private class JsoupAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -109,6 +276,133 @@ public class ExchangeRateManager {
             //if (htmlContentInStringFormat.length() > 1)
                 //Log.d("JSOUPJUN", htmlContentInStringFormat);
         }
+    }
+
+    public class ExchangeRateAdapter extends BaseAdapter {
+        private LayoutInflater inflater;
+        private ArrayList<MoneyList.moneyList> moneyList;
+
+        public ExchangeRateAdapter(Context context, ArrayList<MoneyList.moneyList> eventTitleList){
+            this.inflater = LayoutInflater.from(context);
+            this.moneyList = eventTitleList;
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHandler viewMembers;
+
+            if(convertView == null)
+            {
+                convertView = inflater.inflate(R.layout.moneylist, null);
+                viewMembers = new ViewHandler();
+                viewMembers.CurrencyName = (TextView)convertView.findViewById(R.id.txtCurrencyName);
+                viewMembers.Buying = (TextView)convertView.findViewById(R.id.txtBuying);
+                viewMembers.Selling = (TextView)convertView.findViewById(R.id.txtSelling);
+                viewMembers.Sending = (TextView)convertView.findViewById(R.id.txtSending);
+                viewMembers.Receiving = (TextView)convertView.findViewById(R.id.txtReceiving);
+                convertView.setTag(viewMembers);
+            }
+            else
+            {
+                viewMembers = (ViewHandler) convertView.getTag();
+            }
+
+            MoneyList.moneyList listMem = this.moneyList.get(position);
+
+            viewMembers.CurrencyName.setText(listMem.currencyName);
+            viewMembers.Buying.setText(listMem.buying);
+            viewMembers.Selling.setText(listMem.selling);
+            viewMembers.Sending.setText(listMem.sending);
+            viewMembers.Receiving.setText(listMem.receiving);
+
+            Log.d("Adapter", "set " + listMem.currencyName);
+
+            return convertView;
+        }
+        class ViewHandler{
+            TextView CurrencyName;
+            TextView Buying;
+            TextView Selling;
+            TextView Sending;
+            TextView Receiving;
+        }
+
+        public final int getCount() {
+            return moneyList.size();
+        }
+
+        public final Object getItem(int position) {
+            return moneyList.get(position);
+        }
+
+        public final long getItemId(int position) {
+            return position;
+        }
+
+        public final MoneyList.moneyList getItemAtPosition(int position)
+        {
+            return moneyList.get(position);
+        }
+    }
+
+    public class AlertListAdapter extends BaseAdapter {
+        private LayoutInflater inflater;
+        private ArrayList<MoneyList.alertList> alertList;
+
+        public AlertListAdapter(Context context, ArrayList<MoneyList.alertList> eventTitleList){
+            this.inflater = LayoutInflater.from(context);
+            this.alertList = eventTitleList;
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHandler viewMembers;
+
+            if(convertView == null)
+            {
+                convertView = inflater.inflate(R.layout.alertlist, null);
+                viewMembers = new ViewHandler();
+                viewMembers.txtCurrencyName = (TextView)convertView.findViewById(R.id.txtAlertCurrencyNameValue);
+                viewMembers.txtStandardName = (TextView)convertView.findViewById(R.id.txtAlertStandardNameValue);
+                viewMembers.txtPriceValue = (TextView)convertView.findViewById(R.id.txtAlertPriceValue);
+                convertView.setTag(viewMembers);
+            }
+            else
+            {
+                viewMembers = (ViewHandler) convertView.getTag();
+            }
+
+            MoneyList.alertList listMem = this.alertList.get(position);
+
+            viewMembers.txtCurrencyName.setText(listMem.currencyName);
+            viewMembers.txtStandardName.setText(listMem.standardName);
+            viewMembers.txtPriceValue.setText(listMem.priceValue);
+
+            Log.d("Adapter", "set " + listMem.currencyName);
+
+            return convertView;
+        }
+        class ViewHandler{
+            TextView txtCurrencyName;
+            TextView txtStandardName;
+            TextView txtPriceValue;
+        }
+
+        public final int getCount() {
+            return alertList.size();
+        }
+
+        public final Object getItem(int position) {
+            return alertList.get(position);
+        }
+
+        public final long getItemId(int position) {
+            return position;
+        }
+
+        public final MoneyList.alertList getItemAtPosition(int position)
+        {
+            return alertList.get(position);
+        }
+
     }
 
 }

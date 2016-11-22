@@ -1,5 +1,6 @@
 package com.blogspot.junmond.exchangerateyo;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -25,6 +26,8 @@ public class Notifier {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(parentContext)
                         .setSmallIcon(R.drawable.kaonasi)
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setPriority(Notification.PRIORITY_HIGH)
                         .setContentTitle(Title)
                         .setContentText(Text);
 

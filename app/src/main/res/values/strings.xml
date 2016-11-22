@@ -1,3 +1,43 @@
 <resources>
     <string name="app_name">ExchangeRateYo</string>
+
+    <string-array name="currency_arrays">
+    <item>USD</item>
+    <item>EUR</item>
+    <item>JPY</item>
+    <item>CNY</item>
+    <item>GBP</item>
+    <item>CAD</item>
+    <item>CHF</item>
+    <item>HKD</item>
+    <item>SEK</item>
+    <item>AUD</item>
+    <item>DKK</item>
+    <item>NOK</item>
+    <item>SAR</item>
+    <item>KWD</item>
+    <item>BHD</item>
+    <item>AED</item>
+    <item>MYR</item>
+    <item>NZD</item>
+    <item>THB</item>
+    <item>IDR</item>
+    <item>ZAR</item>
+    <item>RUB</item>
+    <item>VND</item>
+    <item>PHP</item>
+    <item>MXN</item>
+    <item>BRL</item>
+    <item>HUF</item>
+    <item>PLN</item>
+    <item>TRY</item>
+    <item>CZK</item>
+</string-array>
+
+    <string-array name="standard_arrays">
+        <item>현찰 살 때</item>
+        <item>현찰 팔 때</item>
+        <item>송금 보낼 때</item>
+        <item>송금 받을 때</item>
+    </string-array>
 </resources>
