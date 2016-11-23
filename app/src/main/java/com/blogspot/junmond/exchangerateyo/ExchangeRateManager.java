@@ -47,6 +47,46 @@ public class ExchangeRateManager {
         notifier = new Notifier(context);
     }
 
+    public void NotifyToUser(String title, String text)
+    {
+        if(notifier != null)
+            notifier.NotifyToUser(title, text);
+    }
+
+    public void NotifyIfGoalSatisfied()
+    {
+        NotifyIfGoalTask notifyIfGoalTask = new NotifyIfGoalTask();
+        notifyIfGoalTask.execute();
+    }
+
+    private class NotifyIfGoalTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            // read alert list
+            String alertList = readAlertListFile();
+            Log.d("NotifyIfGoalTask", alertList);
+            // get data from web
+            ArrayList<MoneyList.moneyList> moneyList = getMoneyListViaNet();
+            Log.d("NotifyIfGoalTask", "len(" + moneyList.size() + ") idx0, currency(" + moneyList.get(0).currencyName + "), buying(" + moneyList.get(0).buying);
+
+            // compare if goal satisfied.
+            // make notification.
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+        }
+    }
+
+
     public void addAlert(String currencyName, String standardName, String price)
     {
         // save to file
@@ -81,11 +121,9 @@ public class ExchangeRateManager {
         }
     }
 
-    public void showAlertList()
+    private String readAlertListFile()
     {
         String output = null;
-
-        notifier.NotifyToUser("test Title", "test Text");
 
         try
         {
@@ -108,8 +146,17 @@ public class ExchangeRateManager {
         catch(Exception e)
         {
             e.printStackTrace();
-            return;
+            return null;
         }
+
+        return output;
+    }
+
+    public void showAlertList()
+    {
+        String output = null;
+
+        output = readAlertListFile();
 
         if(output.length() < 5)
         {
@@ -176,8 +223,8 @@ public class ExchangeRateManager {
     }
 
     public void getExchangeRateData(){
-        JsoupAsyncTask jsoupAsyncTask = new JsoupAsyncTask();
-        jsoupAsyncTask.execute();
+        GetAndShowRateTask getAndShowRateTask = new GetAndShowRateTask();
+        getAndShowRateTask.execute();
     }
 
     public void ShowMoney()
@@ -186,8 +233,8 @@ public class ExchangeRateManager {
     }
 
 
-    private void getDataViaJSOUP(){
-
+    private ArrayList<MoneyList.moneyList> getMoneyListViaNet()
+    {
         final ArrayList<MoneyList.moneyList> moneyLists = new ArrayList<MoneyList.moneyList>();
 
         try {
@@ -228,9 +275,9 @@ public class ExchangeRateManager {
                     item.sending = sending;
                     item.receiving = receiving;
 
-                    Log.d("htmlJun", "currency : " + CurrencyName);
-                    Log.d("htmlJun", "price : " + buying + ", " + selling + ", " + sending + ", " + receiving);
-                    Log.d("htmlJun", "--------------------------");
+//                    Log.d("htmlJun", "currency : " + CurrencyName);
+  //                  Log.d("htmlJun", "price : " + buying + ", " + selling + ", " + sending + ", " + receiving);
+    //                Log.d("htmlJun", "--------------------------");
 
                     moneyLists.add(item);
                 }
@@ -240,7 +287,12 @@ public class ExchangeRateManager {
             e.printStackTrace();
         }
 
+        return moneyLists;
+    }
 
+    private void getDataViaJSOUP(){
+
+        final ArrayList<MoneyList.moneyList> moneyLists = getMoneyListViaNet();
 
         new Thread(new Runnable() {
             @Override
@@ -257,7 +309,7 @@ public class ExchangeRateManager {
 
     }
 
-    private class JsoupAsyncTask extends AsyncTask<Void, Void, Void> {
+    private class GetAndShowRateTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -273,10 +325,10 @@ public class ExchangeRateManager {
 
         @Override
         protected void onPostExecute(Void result) {
-            //if (htmlContentInStringFormat.length() > 1)
-                //Log.d("JSOUPJUN", htmlContentInStringFormat);
         }
     }
+
+
 
     public class ExchangeRateAdapter extends BaseAdapter {
         private LayoutInflater inflater;

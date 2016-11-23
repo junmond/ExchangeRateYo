@@ -1,19 +1,38 @@
 package com.blogspot.junmond.exchangerateyo;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
 
     ExchangeRateManager moneyManager = null;
 
+    private PendingIntent pendingIntent;
+    private AlarmManager manager;
+
+    public void startAlarm() {
+        manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        //int interval = 3600 * 1000;
+        int interval = 10 * 1000;
+
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         moneyManager = new ExchangeRateManager(this, getApplicationContext());
 
@@ -39,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                //openManagerWithTabIndex(tab.getPosition());
             }
 
             @Override
@@ -52,6 +70,13 @@ public class MainActivity extends AppCompatActivity {
                 //openManagerWithTabIndex(tab.getPosition());
             }
         });
+
+
+        // Retrieve a PendingIntent that will perform a broadcast
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        startAlarm();
 
     }
 }
