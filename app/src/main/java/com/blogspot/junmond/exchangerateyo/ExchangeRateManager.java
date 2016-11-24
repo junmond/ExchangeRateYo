@@ -68,15 +68,66 @@ public class ExchangeRateManager {
 
         @Override
         protected Void doInBackground(Void... params) {
-            // read alert list
-            String alertList = readAlertListFile();
-            Log.d("NotifyIfGoalTask", alertList);
             // get data from web
             ArrayList<MoneyList.moneyList> moneyList = getMoneyListViaNet();
-            Log.d("NotifyIfGoalTask", "len(" + moneyList.size() + ") idx0, currency(" + moneyList.get(0).currencyName + "), buying(" + moneyList.get(0).buying);
 
-            // compare if goal satisfied.
-            // make notification.
+            // read alert list
+            String alertList = readAlertListFile();
+            for(String alertItem : alertList.split("@"))
+            {
+                String alertCurrency = alertItem.split("\t")[0];
+                String alertStandard = alertItem.split("\t")[1];
+                String alertPrice = alertItem.split("\t")[2];
+
+                Log.d("NotifyIfGoalTask", "alertItem : currency(" + alertCurrency + "), standard(" + alertStandard + "), price(" + alertPrice + ")");
+
+                for(MoneyList.moneyList moneyData : moneyList)
+                {
+                    if(moneyData.currencyName.contains(alertCurrency))
+                    {
+                        float comparePrice = 0;
+                        float fAlertPrice = Float.parseFloat(alertPrice);
+                        boolean bWantBigger = false;
+
+                        Log.d("NotifyIfGoalTask", "found currency(" + moneyData.currencyName + "), buying(" + moneyData.buying + "), selling(" + moneyData.selling
+                                + "(, sending(" + moneyData.sending + "), receiving(" + moneyData.receiving + ")");
+
+                        // compare if goal satisfied.
+                        if(alertStandard.equals("현찰 살 때"))
+                        {
+                            comparePrice = Float.parseFloat(moneyData.buying);
+                            bWantBigger = false;
+                        }
+                        else if(alertStandard.equals("현찰 팔 때"))
+                        {
+                            comparePrice = Float.parseFloat(moneyData.selling);
+                            bWantBigger = true;
+                        }
+                        else if(alertStandard.equals("송금 보낼 때"))
+                        {
+                            comparePrice = Float.parseFloat(moneyData.sending);
+                            bWantBigger = false;
+                        }
+                        else if(alertStandard.equals("송금 받을 때"))
+                        {
+                            comparePrice = Float.parseFloat(moneyData.receiving);
+                            bWantBigger = true;
+                        }
+
+                        boolean bAlert = false;
+
+                        bAlert = bWantBigger ? (fAlertPrice<comparePrice) : (fAlertPrice>comparePrice);
+
+                        if(bAlert)
+                        {
+                            // make notification.
+                            notifier.NotifyToUser("money dest reached", alertCurrency + " 환율이 목표 금액에 도달했습니다. 현재 가격 : " + Float.toString(comparePrice));
+                        }
+                    }
+                }
+
+
+            }
 
             return null;
         }
