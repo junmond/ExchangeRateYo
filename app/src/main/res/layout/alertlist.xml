@@ -3,39 +3,33 @@
     android:layout_width="fill_parent" android:layout_height="fill_parent">
 
 
-
-    <TextView
-        android:id="@+id/txtAlertCurrencyName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="통화명 : "
-        android:textColor="#000000"
-        android:layout_alignParentStart="true"/>
-
     <TextView
         android:id="@+id/txtAlertCurrencyNameValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="미국 USD"
+        android:paddingLeft="7dp"
         android:textColor="#000000"
-        android:layout_toRightOf="@+id/txtAlertCurrencyName"/>
+        android:layout_alignParentStart="true"/>
 
     <TextView
         android:id="@+id/txtAlertStandardName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="기준 : "
+        android:paddingLeft="7dp"
         android:textColor="#000000"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/txtAlertCurrencyName"/>
+        android:layout_below="@+id/txtAlertCurrencyNameValue"/>
 
     <TextView
         android:id="@+id/txtAlertStandardNameValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="현찰 살 때"
+        android:paddingLeft="20dp"
         android:textColor="#000000"
-        android:layout_below="@+id/txtAlertCurrencyName"
+        android:layout_below="@+id/txtAlertCurrencyNameValue"
         android:layout_toRightOf="@+id/txtAlertStandardName"/>
 
     <TextView
@@ -43,6 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="가격 : "
+        android:paddingLeft="7dp"
         android:textColor="#000000"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/txtAlertStandardName"/>
@@ -52,6 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="1109.29"
+        android:paddingLeft="20dp"
         android:textColor="#000000"
         android:layout_below="@+id/txtAlertStandardName"
         android:layout_toRightOf="@+id/txtAlertPrice"/>

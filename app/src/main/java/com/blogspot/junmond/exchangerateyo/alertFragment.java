@@ -79,6 +79,7 @@ public class alertFragment extends Fragment
                         String alertPrice = edtPrice.getText().toString();
 
                         moneyManager.addAlert(currencyName, standardName, alertPrice);
+                        moneyManager.showAlertList();
 
                         Log.d("alert", "yes clicked, currency(" + currencyName + "), standard(" + standardName + "), price(" + alertPrice + ")");
                     }
@@ -110,7 +111,24 @@ public class alertFragment extends Fragment
         btnRemoveAll.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                moneyManager.deleteAlertList();
+
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Light_Dialog_Alert);
+                builder
+                        .setTitle( "delete All AlertList ")
+                        .setMessage( "모든 알림 제거?" )
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton( "예", new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                moneyManager.deleteAlertList();
+                                moneyManager.showAlertList();
+                            }
+                        })
+                        .setNegativeButton( "아뇨", null)
+                        .show();
+
+                //moneyManager.deleteAlertList();
             }
         });
 

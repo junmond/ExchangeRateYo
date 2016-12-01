@@ -1,13 +1,16 @@
 package com.blogspot.junmond.exchangerateyo;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -73,8 +76,16 @@ public class ExchangeRateManager {
 
             // read alert list
             String alertList = readAlertListFile();
+            if(alertList == null)
+            {
+                alertList = "";
+            }
             for(String alertItem : alertList.split("@"))
             {
+                if(alertItem.length() < 5)
+                {
+                    continue;
+                }
                 String alertCurrency = alertItem.split("\t")[0];
                 String alertStandard = alertItem.split("\t")[1];
                 String alertPrice = alertItem.split("\t")[2];
@@ -137,6 +148,28 @@ public class ExchangeRateManager {
         }
     }
 
+    public void writeCurrentAlertList()
+    {
+        if(alertString.length() < 5)
+        {
+            Log.d("writeCurrentAlertList", "invalid alertString length : " + alertString.length());
+        }
+        String writeString = alertString;
+
+        try
+        {
+            OutputStreamWriter osw = new OutputStreamWriter(parentContext.openFileOutput(alertFileName, parentContext.MODE_PRIVATE));
+            // write buffer
+            osw.write(writeString);
+            Log.d("writeCurrentAlertList", "string written(" + writeString + ")");
+            osw.close();
+            alertString = writeString;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
     public void addAlert(String currencyName, String standardName, String price)
     {
@@ -170,6 +203,7 @@ public class ExchangeRateManager {
         {
             e.printStackTrace();
         }
+
     }
 
     private String readAlertListFile()
@@ -209,10 +243,10 @@ public class ExchangeRateManager {
 
         output = readAlertListFile();
 
-        if(output.length() < 5)
+        if(output == null || output.length() < 5)
         {
-            Log.d("showAlertList", "output is too short, len : " + output.length());
-            return;
+            Log.d("showAlertList", "output is too short, len : " + Integer.toString(output!=null?output.length():0));
+            output = "";
         }
         alertString = output;
         //alertString.split("\n");
@@ -226,6 +260,11 @@ public class ExchangeRateManager {
 
         for(String str : alertString.split("@"))
         {
+            if(str.length()< 5)
+            {
+                continue;
+            }
+
             MoneyList.alertList item = new MoneyList.alertList();
 
             String currencyName = str.split("\t")[0];
@@ -257,9 +296,9 @@ public class ExchangeRateManager {
 
     public void deleteAlertList()
     {
-        Log.d("deleteAlertList", "delete : " + alertFileName);
-        parentContext.deleteFile(alertFileName);
-        alertString = null;
+          Log.d("deleteAlertList", "delete : " + alertFileName);
+          parentContext.deleteFile(alertFileName);
+          alertString = null;
     }
 
     private boolean isInCurrencyList(String CurrencyName)
@@ -379,8 +418,6 @@ public class ExchangeRateManager {
         }
     }
 
-
-
     public class ExchangeRateAdapter extends BaseAdapter {
         private LayoutInflater inflater;
         private ArrayList<MoneyList.moneyList> moneyList;
@@ -398,10 +435,10 @@ public class ExchangeRateManager {
                 convertView = inflater.inflate(R.layout.moneylist, null);
                 viewMembers = new ViewHandler();
                 viewMembers.CurrencyName = (TextView)convertView.findViewById(R.id.txtCurrencyName);
-                viewMembers.Buying = (TextView)convertView.findViewById(R.id.txtBuying);
-                viewMembers.Selling = (TextView)convertView.findViewById(R.id.txtSelling);
-                viewMembers.Sending = (TextView)convertView.findViewById(R.id.txtSending);
-                viewMembers.Receiving = (TextView)convertView.findViewById(R.id.txtReceiving);
+                viewMembers.Buying = (TextView)convertView.findViewById(R.id.txtBuyingValue);
+                viewMembers.Selling = (TextView)convertView.findViewById(R.id.txtSellingValue);
+                viewMembers.Sending = (TextView)convertView.findViewById(R.id.txtSendingValue);
+                viewMembers.Receiving = (TextView)convertView.findViewById(R.id.txtReceivingValue);
                 convertView.setTag(viewMembers);
             }
             else
@@ -412,10 +449,10 @@ public class ExchangeRateManager {
             MoneyList.moneyList listMem = this.moneyList.get(position);
 
             viewMembers.CurrencyName.setText(listMem.currencyName);
-            viewMembers.Buying.setText(listMem.buying);
-            viewMembers.Selling.setText(listMem.selling);
-            viewMembers.Sending.setText(listMem.sending);
-            viewMembers.Receiving.setText(listMem.receiving);
+            viewMembers.Buying.setText(listMem.buying + " KRW");
+            viewMembers.Selling.setText(listMem.selling + " KRW");
+            viewMembers.Sending.setText(listMem.sending + " KRW");
+            viewMembers.Receiving.setText(listMem.receiving + " KRW");
 
             Log.d("Adapter", "set " + listMem.currencyName);
 
@@ -456,8 +493,9 @@ public class ExchangeRateManager {
             this.alertList = eventTitleList;
         }
 
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHandler viewMembers;
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            final ViewHandler viewMembers;
+            final ViewGroup viewParent = parent;
 
             if(convertView == null)
             {
@@ -466,6 +504,33 @@ public class ExchangeRateManager {
                 viewMembers.txtCurrencyName = (TextView)convertView.findViewById(R.id.txtAlertCurrencyNameValue);
                 viewMembers.txtStandardName = (TextView)convertView.findViewById(R.id.txtAlertStandardNameValue);
                 viewMembers.txtPriceValue = (TextView)convertView.findViewById(R.id.txtAlertPriceValue);
+                Button btnRemove = (Button)convertView.findViewById(R.id.btnRemove);
+                btnRemove.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+
+                        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder( viewParent.getContext() , android.R.style.Theme_Material_Light_Dialog_Alert);
+                        builder
+                                .setTitle( "delete AlertList ")
+                                .setMessage( viewMembers.txtCurrencyName.getText() + " 알림 제거?" )
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setPositiveButton( "예", new DialogInterface.OnClickListener()
+                                {
+                                    public void onClick(DialogInterface dialog, int which)
+                                    {
+                                        Log.d("BtnRemove", "before del : " + alertString);
+                                        alertString = alertString.replace(alertString.split("@")[position] + "@", "");
+                                        Log.d("BtnRemove", "after del : " + alertString);
+                                        writeCurrentAlertList();
+                                        showAlertList();
+                                    }
+                                })
+                                .setNegativeButton( "아뇨", null)
+                                .show();
+
+
+                    }
+                });
                 convertView.setTag(viewMembers);
             }
             else
@@ -477,7 +542,7 @@ public class ExchangeRateManager {
 
             viewMembers.txtCurrencyName.setText(listMem.currencyName);
             viewMembers.txtStandardName.setText(listMem.standardName);
-            viewMembers.txtPriceValue.setText(listMem.priceValue);
+            viewMembers.txtPriceValue.setText(listMem.priceValue + " KRW");
 
             Log.d("Adapter", "set " + listMem.currencyName);
 

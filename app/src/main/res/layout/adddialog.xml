@@ -76,7 +76,7 @@
             android:id="@+id/txtPrice" />
 
         <EditText
-            android:text="Price"
+            android:hint="Price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="number"
