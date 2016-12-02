@@ -132,16 +132,6 @@ public class alertFragment extends Fragment
             }
         });
 
-        Button btnRefresh = (Button)getActivity().findViewById(R.id.btnRefresh);
-        btnRefresh.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                moneyManager.showAlertList();
-            }
-        });
-
-
-
         Log.d("Fragment", "onActivityCreated2");
         super.onActivityCreated(savedInstanceState);
 

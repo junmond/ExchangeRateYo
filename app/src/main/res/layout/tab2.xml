@@ -18,19 +18,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="498dp"
-        android:layout_toLeftOf="@+id/btnRefresh"
-        android:id="@+id/btnRemoveAll" />
-
-    <Button
-        android:text="새로고침"
-        android:background="@android:color/transparent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="498dp"
-        android:id="@+id/btnRefresh" />
+        android:id="@+id/btnRemoveAll" />
+
 
     <ListView
         android:layout_width="fill_parent"

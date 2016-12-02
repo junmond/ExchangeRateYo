@@ -51,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
         settingFragment setFragment = new settingFragment();
         setFragment.initMoneyManager(moneyManager);
 
-        adapter.addFragment(rateFragment, "환율 조회");
-        adapter.addFragment(alFragment, "환율 알림");
-        adapter.addFragment(setFragment, "설정");
+        adapter.addFragment(rateFragment, getString(R.string.TAB_NAME_GET_CURRENCY_RATE));
+        adapter.addFragment(alFragment, getString(R.string.TAB_NAME_CURRENCY_RATE_ALERT));
+        adapter.addFragment(setFragment, getString(R.string.TAB_NAME_SETTINGS));
         viewPager.setAdapter(adapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);

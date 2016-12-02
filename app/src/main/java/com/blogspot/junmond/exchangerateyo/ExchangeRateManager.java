@@ -364,11 +364,6 @@ public class ExchangeRateManager {
                     item.selling = selling;
                     item.sending = sending;
                     item.receiving = receiving;
-
-//                    Log.d("htmlJun", "currency : " + CurrencyName);
-  //                  Log.d("htmlJun", "price : " + buying + ", " + selling + ", " + sending + ", " + receiving);
-    //                Log.d("htmlJun", "--------------------------");
-
                     moneyLists.add(item);
                 }
             }
@@ -449,10 +444,10 @@ public class ExchangeRateManager {
             MoneyList.moneyList listMem = this.moneyList.get(position);
 
             viewMembers.CurrencyName.setText(listMem.currencyName);
-            viewMembers.Buying.setText(listMem.buying + " KRW");
-            viewMembers.Selling.setText(listMem.selling + " KRW");
-            viewMembers.Sending.setText(listMem.sending + " KRW");
-            viewMembers.Receiving.setText(listMem.receiving + " KRW");
+            viewMembers.Buying.setText(listMem.buying + " " + parentContext.getString(R.string.UNIT_MONEY_KRW));
+            viewMembers.Selling.setText(listMem.selling + " " + parentContext.getString(R.string.UNIT_MONEY_KRW));
+            viewMembers.Sending.setText(listMem.sending + " " + parentContext.getString(R.string.UNIT_MONEY_KRW));
+            viewMembers.Receiving.setText(listMem.receiving + " " + parentContext.getString(R.string.UNIT_MONEY_KRW));
 
             Log.d("Adapter", "set " + listMem.currencyName);
 

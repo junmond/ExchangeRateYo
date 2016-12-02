@@ -1,7 +1,26 @@
 <resources>
     <string name="app_name">ExchangeRateYo</string>
 
-    <string-array name="currency_arrays">
+    <string name="TAB_NAME_GET_CURRENCY_RATE">환율 조회</string>
+    <string name="TAB_NAME_CURRENCY_RATE_ALERT">환율 알림</string>
+    <string name="TAB_NAME_SETTINGS">설정</string>
+
+    <string name="STANDARD_BUYING">현찰 살 때</string>
+    <string name="STANDARD_SELLING">현찰 팔 때</string>
+    <string name="STANDARD_SENDING">송금 보낼 때</string>
+    <string name="STANDARD_RECEIVING">송금 받을 때</string>
+
+    <string name="PERIOD_30MIN">30분</string>
+    <string name="PERIOD_HOUR">1시간</string>
+    <string name="PERIOD_3HOURS">3시간</string>
+    <string name="PERIOD_6HOURS">6시간</string>
+    <string name="PERIOD_12HOURS">12시간</string>
+    <string name="PERIOD_DAY">1일</string>
+    <string name="PERIOD_3DAYS">3일</string>
+
+    <string name="UNIT_MONEY_KRW">KRW</string>
+
+    <string-array name="currency_arrays_short">
     <item>USD</item>
     <item>EUR</item>
     <item>JPY</item>
@@ -18,6 +37,7 @@
     <item>KWD</item>
     <item>BHD</item>
     <item>AED</item>
+    <item>SGD</item>
     <item>MYR</item>
     <item>NZD</item>
     <item>THB</item>
@@ -34,10 +54,57 @@
     <item>CZK</item>
 </string-array>
 
-    <string-array name="standard_arrays">
-        <item>현찰 살 때</item>
-        <item>현찰 팔 때</item>
-        <item>송금 보낼 때</item>
-        <item>송금 받을 때</item>
+    <string-array name="currency_arrays_long">
+        <item>미국 USD</item>
+        <item>유로 EUR</item>
+        <item>일본 JPY 100</item>
+        <item>중국 CNY</item>
+        <item>영국 GBP</item>
+        <item>캐나다 CAD</item>
+        <item>스위스 CHF</item>
+        <item>홍콩 HKD</item>
+        <item>스웨덴 SEK</item>
+        <item>호주 AUD</item>
+        <item>덴마크 DKK</item>
+        <item>노르웨이 NOK</item>
+        <item>사우디아라비아 SAR</item>
+        <item>쿠웨이트 KWD</item>
+        <item>바레인 BHD</item>
+        <item>아랍에미리트공화국 AED</item>
+        <item>싱가포르 SGD</item>
+        <item>말레이시아 MYR</item>
+        <item>뉴질랜드 NZD</item>
+        <item>태국 THB</item>
+        <item>인도네시아 IDR 100</item>
+        <item>남아공화국 ZAR</item>
+        <item>러시아 RUB</item>
+        <item>베트남 VND 100</item>
+        <item>필리핀 PHP</item>
+        <item>멕시코 MXN</item>
+        <item>브라질 BRL</item>
+        <item>헝가리 HUF</item>
+        <item>폴란드 PLN</item>
+        <item>터키 TRY</item>
+        <item>체코 CZK</item>
     </string-array>
+
+    <string-array name="standard_arrays">
+        <item>@string/STANDARD_BUYING</item>
+        <item>@string/STANDARD_SELLING</item>
+        <item>@string/STANDARD_SENDING</item>
+        <item>@string/STANDARD_RECEIVING</item>
+    </string-array>
+
+    <string-array name="period_arrays">
+        <item>@string/PERIOD_30MIN</item>
+        <item>@string/PERIOD_HOUR</item>
+        <item>@string/PERIOD_3HOURS</item>
+        <item>@string/PERIOD_6HOURS</item>
+        <item>@string/PERIOD_12HOURS</item>
+        <item>@string/PERIOD_DAY</item>
+        <item>@string/PERIOD_3DAYS</item>
+    </string-array>
+
+
+
 </resources>

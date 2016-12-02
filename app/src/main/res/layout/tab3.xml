@@ -1,16 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:text="This is tab3"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="73dp"
-        android:layout_marginTop="66dp"
-        android:id="@+id/textView" />
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="50dp">
 
-</LinearLayout>
+        <TextView
+            android:text="환율 알림 주기"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="30dp"
+            android:layout_centerVertical="true"
+            android:id="@+id/txtPeriod" />
+
+        <Spinner
+            android:text="주기"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/txtPeriod"
+            android:layout_marginLeft="50dp"
+            android:layout_centerVertical="true"
+            android:id="@+id/spnPeriod" />
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

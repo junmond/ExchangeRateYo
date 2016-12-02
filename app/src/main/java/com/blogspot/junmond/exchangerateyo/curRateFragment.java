@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,22 @@ public class curRateFragment extends Fragment
 
         moneyManager = new ExchangeRateManager(getActivity(), getActivity().getApplicationContext() );
         moneyManager.getExchangeRateData();
+
+        final SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout)getActivity().findViewById(R.id.swipeRefresh);
+        refreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        Log.i("refreshLayout", "onRefresh called from SwipeRefreshLayout");
+
+                        if(moneyManager != null)
+                        {
+                            moneyManager.getExchangeRateData();
+                        }
+                        refreshLayout.setRefreshing(false);
+                    }
+                }
+        );
 
         super.onActivityCreated(savedInstanceState);
     }
