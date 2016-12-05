@@ -51,14 +51,15 @@ public class alertFragment extends Fragment
     public void addBtnClicked(View v)
     {
         AlertDialog.Builder b = new AlertDialog.Builder(getContext());
-        b.setTitle("Add Alert");
+        b.setTitle(getString(R.string.ALERT_ADD_TITLE));
+
 
         LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View dialogView = inflater.inflate(R.layout.adddialog, null);
 
         // work with currency spinner
         final Spinner spnCurrency = (Spinner)dialogView.findViewById(R.id.spnCurrency);
-        ArrayAdapter<CharSequence> currencyAdapter = ArrayAdapter.createFromResource(getContext(), R.array.currency_arrays, R.layout.support_simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> currencyAdapter = ArrayAdapter.createFromResource(getContext(), R.array.currency_arrays_long, R.layout.support_simple_spinner_dropdown_item);
         currencyAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spnCurrency.setAdapter(currencyAdapter);
         
@@ -70,7 +71,7 @@ public class alertFragment extends Fragment
 
         b.setView(dialogView);
 
-        b.setPositiveButton("YES",
+        b.setPositiveButton("확인",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String currencyName = spnCurrency.getSelectedItem().toString();
@@ -85,7 +86,7 @@ public class alertFragment extends Fragment
                     }
                 });
 
-        b.setNegativeButton("NO",
+        b.setNegativeButton("취소",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Log.d("alert", "no clicked");
@@ -114,8 +115,8 @@ public class alertFragment extends Fragment
 
                 android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Light_Dialog_Alert);
                 builder
-                        .setTitle( "delete All AlertList ")
-                        .setMessage( "모든 알림 제거?" )
+                        .setTitle( getString(R.string.ALERT_DELETEALL_TITLE))
+                        .setMessage( getString(R.string.ALERT_DELETEALL_TEXT))
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton( "예", new DialogInterface.OnClickListener()
                         {
@@ -125,7 +126,7 @@ public class alertFragment extends Fragment
                                 moneyManager.showAlertList();
                             }
                         })
-                        .setNegativeButton( "아뇨", null)
+                        .setNegativeButton( "아니오", null)
                         .show();
 
                 //moneyManager.deleteAlertList();

@@ -132,7 +132,14 @@ public class ExchangeRateManager {
                         if(bAlert)
                         {
                             // make notification.
-                            notifier.NotifyToUser("money dest reached", alertCurrency + " 환율이 목표 금액에 도달했습니다. 현재 가격 : " + Float.toString(comparePrice));
+                            Log.d("destReached", "send notification");
+
+                            notifier.NotifyToUser(parentContext.getString(R.string.NOTIFICATION_TITLE),
+                                    alertCurrency + parentContext.getString(R.string.NOTIFICATION_TEXT) + Float.toString(comparePrice));
+                        }
+                        else
+                        {
+                            Log.d("destReached", "no notification, destPrice(" + Float.toString(fAlertPrice) + "), compare(" + Float.toString(comparePrice) + "), wantBigger:" + bWantBigger);
                         }
                     }
                 }
@@ -506,8 +513,11 @@ public class ExchangeRateManager {
 
                         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder( viewParent.getContext() , android.R.style.Theme_Material_Light_Dialog_Alert);
                         builder
-                                .setTitle( "delete AlertList ")
-                                .setMessage( viewMembers.txtCurrencyName.getText() + " 알림 제거?" )
+                                .setTitle( viewParent.getContext().getString(R.string.ALERT_DELETE_TITLE))
+                                .setMessage( viewParent.getContext().getString(R.string.ALERT_DELETE_CURRENCY) + viewMembers.txtCurrencyName.getText() + "\n" +
+                                            viewParent.getContext().getString(R.string.ALERT_DELETE_STANDARD) + viewMembers.txtStandardName.getText() + "\n" +
+                                            viewParent.getContext().getString(R.string.ALERT_DELETE_PRICE) + viewMembers.txtPriceValue.getText() + "\n\n" +
+                                            viewParent.getContext().getString(R.string.ALERT_DELETE_TEXT))
                                 .setIcon(android.R.drawable.ic_dialog_alert)
                                 .setPositiveButton( "예", new DialogInterface.OnClickListener()
                                 {
@@ -520,7 +530,7 @@ public class ExchangeRateManager {
                                         showAlertList();
                                     }
                                 })
-                                .setNegativeButton( "아뇨", null)
+                                .setNegativeButton( "아니오", null)
                                 .show();
 
 

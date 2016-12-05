@@ -20,6 +20,20 @@
 
     <string name="UNIT_MONEY_KRW">KRW</string>
 
+    <string name="ALERT_ADD_TITLE">알림 추가</string>
+
+    <string name="ALERT_DELETE_TITLE">알림 제거</string>
+    <string name="ALERT_DELETE_CURRENCY">통화명 : </string>
+    <string name="ALERT_DELETE_STANDARD">기준 : </string>
+    <string name="ALERT_DELETE_PRICE">목표금액 : </string>
+    <string name="ALERT_DELETE_TEXT">알림을 제거 하시겠습니까?</string>
+
+    <string name="ALERT_DELETEALL_TITLE">모든 알림 제거</string>
+    <string name="ALERT_DELETEALL_TEXT">설정된 모든 알림을 제거하시겠습니까?</string>
+
+    <string name="NOTIFICATION_TITLE">목표 금액 달성!</string>
+    <string name="NOTIFICATION_TEXT">통화가 목표 금액에 도달했습니다. 현재 가격 : </string>
+
     <string-array name="currency_arrays_short">
     <item>USD</item>
     <item>EUR</item>

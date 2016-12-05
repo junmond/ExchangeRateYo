@@ -27,6 +27,51 @@ public class settingFragment extends Fragment
         this.moneyManager = manager;
     }
 
+    public int getIntervalFromString(String intervalOpt)
+    {
+        int interval = 1000;    // 1s
+
+        if(intervalOpt.equals("30분")){
+            interval = 30 * 60 * 1000;
+        } else if(intervalOpt.equals("1시간")){
+            interval = 1 * 60 * 60 * 1000;
+        } else if(intervalOpt.equals("3시간")){
+            interval = 3 * 60 * 60 * 1000;
+        } else if(intervalOpt.equals("6시간")){
+            interval = 6 * 60 * 60 * 1000;
+        } else if(intervalOpt.equals("12시간")){
+            interval = 12 * 60 * 60 * 1000;
+        } else if(intervalOpt.equals("1일")){
+            interval = 1 * 24 * 60 * 60 * 1000;
+        } else if(intervalOpt.equals("3일")){
+            interval = 3 * 24 * 60 * 60 * 1000;
+        }
+        return interval;
+    }
+
+    public int getItemPosFromInterval(int interval)
+    {
+        switch(interval)
+        {
+            case (30*60*1000):
+                return 0;
+            case (1*60*60*1000):
+                return 1;
+            case (3*60*60*1000):
+                return 2;
+            case (6*60*60*1000):
+                return 3;
+            case (12*60*60*1000):
+                return 4;
+            case (1*24*60*60*1000):
+                return 5;
+            case (3*24*60*60*1000):
+                return 6;
+            default:
+                return 0;
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -49,6 +94,8 @@ public class settingFragment extends Fragment
         periodAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spnPeriod.setAdapter(periodAdapter);
 
+
+        spnPeriod.setSelection(getItemPosFromInterval(SettingManager.getInterval()));
         spnPeriod.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -61,7 +108,10 @@ public class settingFragment extends Fragment
                 AlarmManager am = (AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
                 am.cancel(pendingIntent);
 
-                int interval = 10 * 1000;
+                int interval = getIntervalFromString(spnPeriod.getSelectedItem().toString());
+
+                Log.d("settingPeriod","interval change to " + interval);
+                SettingManager.setInterval(interval);
 
                 am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
             }

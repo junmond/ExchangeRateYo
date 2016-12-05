@@ -11,6 +11,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -24,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void startAlarm() {
         manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        //int interval = 3600 * 1000;
-        int interval = 10 * 1000;
+        int interval = SettingManager.getInterval();
+        Log.d("startAlarm", "gotten interval : " + interval);
 
         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
     }
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        SettingManager.initSettingManager(getApplicationContext());
 
         // Retrieve a PendingIntent that will perform a broadcast
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
