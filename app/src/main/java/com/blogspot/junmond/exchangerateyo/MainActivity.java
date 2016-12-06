@@ -15,6 +15,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
     private PendingIntent pendingIntent;
     private AlarmManager manager;
+
+    InterstitialAd mInterstitialAd;
 
     public void startAlarm() {
         manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
@@ -44,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
         final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
         MyAdapter adapter = new MyAdapter(getSupportFragmentManager());
+
+        adManager.InitAdManager(this);
 
         curRateFragment rateFragment = new curRateFragment();
         rateFragment.initMoneyManager(moneyManager);
@@ -84,6 +94,6 @@ public class MainActivity extends AppCompatActivity {
         pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         startAlarm();
-
     }
+
 }

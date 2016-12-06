@@ -89,11 +89,12 @@ public class settingFragment extends Fragment
     {
         Log.d("Fragment", "onActivityCreated3");
 
+        adManager.showAd();
+
         final Spinner spnPeriod = (Spinner)getActivity().findViewById(R.id.spnPeriod);
         ArrayAdapter<CharSequence> periodAdapter = ArrayAdapter.createFromResource(getContext(), R.array.period_arrays, R.layout.support_simple_spinner_dropdown_item);
         periodAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spnPeriod.setAdapter(periodAdapter);
-
 
         spnPeriod.setSelection(getItemPosFromInterval(SettingManager.getInterval()));
         spnPeriod.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

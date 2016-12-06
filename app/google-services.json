@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "598238786065",
+    "firebase_url": "https://exchangerateyo.firebaseio.com",
+    "project_id": "exchangerateyo",
+    "storage_bucket": "exchangerateyo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:598238786065:android:d15ad7820ac0b404",
+        "android_client_info": {
+          "package_name": "com.blogspot.junmond.exchangerateyo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "598238786065-6eqoebnfnl8kuvkkq49vrkrej1rl03ct.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGueBVXEEpGFNcwR88ZA9TlTuP1Y1mahg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

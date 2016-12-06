@@ -28,6 +28,7 @@ public class curRateFragment extends Fragment
         tabLayout = (TabLayout)rootView.findViewById(R.id.tabs);
         Log.d("Fragment", "onCreateView1");
         int resId = R.layout.tab1;
+
         return inflater.inflate(resId, null);
     }
 

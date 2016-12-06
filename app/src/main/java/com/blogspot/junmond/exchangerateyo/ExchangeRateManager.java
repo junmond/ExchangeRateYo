@@ -12,7 +12,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -320,6 +324,7 @@ public class ExchangeRateManager {
     }
 
     public void getExchangeRateData(){
+        Log.d("getRate", "getExchangeRateData called");
         GetAndShowRateTask getAndShowRateTask = new GetAndShowRateTask();
         getAndShowRateTask.execute();
     }
@@ -379,12 +384,19 @@ public class ExchangeRateManager {
             e.printStackTrace();
         }
 
+        Log.d("getDataVia", "moneyList len : " + moneyLists.size());
+
         return moneyLists;
     }
 
     private void getDataViaJSOUP(){
 
         final ArrayList<MoneyList.moneyList> moneyLists = getMoneyListViaNet();
+        Log.d("getDataVia", "got money list size : " + moneyLists.size());
+
+        int moneylistSize = moneyLists.size();
+
+
 
         new Thread(new Runnable() {
             @Override
@@ -405,6 +417,7 @@ public class ExchangeRateManager {
 
         @Override
         protected void onPreExecute() {
+            Log.d("GetAndShowRate", "preExecute");
             super.onPreExecute();
         }
 
@@ -456,7 +469,29 @@ public class ExchangeRateManager {
             viewMembers.Sending.setText(listMem.sending + " " + parentContext.getString(R.string.UNIT_MONEY_KRW));
             viewMembers.Receiving.setText(listMem.receiving + " " + parentContext.getString(R.string.UNIT_MONEY_KRW));
 
-            Log.d("Adapter", "set " + listMem.currencyName);
+            if(listMem.currencyName.equals("ads"))
+            {
+                Log.d("AdapterCurRate", "found ads! at the position of " + position);
+                RelativeLayout relayoutMoney = (RelativeLayout)convertView.findViewById(R.id.rLayoutMoneyList);
+                relayoutMoney.removeAllViews();
+
+                RelativeLayout relayoutAds = (RelativeLayout)convertView.findViewById(R.id.rLayoutAds);
+                AdView mAdView = (AdView) relayoutAds.findViewById(R.id.adView);
+                AdRequest adRequest = new AdRequest.Builder().build();
+                if(mAdView != null && adRequest != null)
+                    mAdView.loadAd(adRequest);
+                else
+                {
+                    Log.d("AdapterAds", "mAdView : " + mAdView + "adRequeset : " + adRequest);
+                }
+            }
+            else
+            {
+                RelativeLayout relayoutAds = (RelativeLayout)convertView.findViewById(R.id.rLayoutAds);
+                relayoutAds.removeAllViews();
+            }
+
+            Log.d("AdapterCurRate", "set " + listMem.currencyName);
 
             return convertView;
         }
@@ -549,7 +584,7 @@ public class ExchangeRateManager {
             viewMembers.txtStandardName.setText(listMem.standardName);
             viewMembers.txtPriceValue.setText(listMem.priceValue + " KRW");
 
-            Log.d("Adapter", "set " + listMem.currencyName);
+            Log.d("AdapterAlert", "set " + listMem.currencyName);
 
             return convertView;
         }
