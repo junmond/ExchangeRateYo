@@ -31,7 +31,7 @@ public class SettingManager {
 
     public static int getInterval()
     {
-        return alertInterval;
+        return alertInterval!=0?alertInterval:alertInterval_def;
     }
 
     public static void setInterval(int interval)
