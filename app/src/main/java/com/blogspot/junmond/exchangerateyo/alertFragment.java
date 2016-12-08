@@ -133,6 +133,8 @@ public class alertFragment extends Fragment
             }
         });
 
+        adManager.showAd();
+
         Log.d("Fragment", "onActivityCreated2");
         super.onActivityCreated(savedInstanceState);
 

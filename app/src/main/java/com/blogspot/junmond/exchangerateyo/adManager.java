@@ -18,7 +18,8 @@ public class adManager {
     public static void InitAdManager(Context context)
     {
         mInterstitialAd = new InterstitialAd(context);
-        mInterstitialAd.setAdUnitId(context.getString(R.string.junmond_interstitial_ad_unit_id_test));
+        //mInterstitialAd.setAdUnitId(context.getString(R.string.junmond_interstitial_ad_unit_id_test));
+        mInterstitialAd.setAdUnitId(context.getString(R.string.junmond_interstitial_ad_unit_id));
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {

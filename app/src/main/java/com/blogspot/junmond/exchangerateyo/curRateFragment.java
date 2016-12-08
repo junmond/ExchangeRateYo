@@ -40,6 +40,8 @@ public class curRateFragment extends Fragment
         moneyManager = new ExchangeRateManager(getActivity(), getActivity().getApplicationContext() );
         moneyManager.getExchangeRateData();
 
+        adManager.showAd();
+
         final SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout)getActivity().findViewById(R.id.swipeRefresh);
         refreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
