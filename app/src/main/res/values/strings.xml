@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ExchangeRateYo</string>
+    <string name="app_name">환전하세yo</string>
     <string name="junmond_banner_ad_unit_id">ca-app-pub-8361757496691092/8537110360</string>
     <string name="junmond_banner_ad_unit_id_test">ca-app-pub-3940256099942544/6300978111</string>
     <string name="junmond_interstitial_ad_unit_id">ca-app-pub-8361757496691092/4106910768</string>
@@ -37,7 +37,8 @@
     <string name="ALERT_DELETEALL_TEXT">설정된 모든 알림을 제거하시겠습니까?</string>
 
     <string name="NOTIFICATION_TITLE">목표 금액 달성!</string>
-    <string name="NOTIFICATION_TEXT">통화가 목표 금액에 도달했습니다.\n 현재 가격 : </string>
+    <string name="NOTIFICATION_TEXT">통화가 목표 금액에 도달했습니다.\n현재 가격 : </string>
+    <string name="TOAST_FAIL_GET_DATA">환율 정보를 가져올 수 없습니다.\n인터넷 연결 상태를 확인하세요.</string>
 
     <string-array name="currency_arrays_short">
     <item>USD</item>

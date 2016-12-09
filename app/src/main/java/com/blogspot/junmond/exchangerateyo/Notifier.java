@@ -25,7 +25,7 @@ public class Notifier {
     {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(parentContext)
-                        .setSmallIcon(R.drawable.kaonasi)
+                        .setSmallIcon(R.drawable.ic_stat_notify)
                         .setDefaults(Notification.DEFAULT_ALL)
                         .setPriority(Notification.PRIORITY_HIGH)
                         .setContentTitle(Title)

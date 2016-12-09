@@ -31,7 +31,7 @@ public class adManager {
 
     private static void requestNewInterstitial() {
         AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("SEE_YOUR_LOGCAT_TO_GET_YOUR_DEVICE_ID")
+                .addTestDevice("2B6940426B300018C2E847CD754FF7BF")
                 .build();
 
         mInterstitialAd.loadAd(adRequest);

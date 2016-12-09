@@ -5,6 +5,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +17,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -29,6 +33,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+
 
 /**
  * Created by HyunjunLee on 2016-11-14.
@@ -389,14 +394,37 @@ public class ExchangeRateManager {
         return moneyLists;
     }
 
-    private void getDataViaJSOUP(){
+    private boolean getDataViaJSOUP(){
 
-        final ArrayList<MoneyList.moneyList> moneyLists = getMoneyListViaNet();
+        ArrayList<MoneyList.moneyList> moneyLists = getMoneyListViaNet();
         Log.d("getDataVia", "got money list size : " + moneyLists.size());
 
         int moneylistSize = moneyLists.size();
+        boolean failed = false;
 
+        if(moneyLists == null ||
+            moneyLists.size() == 0)
+        {
+            int retLimit = 5, retCount = 0;
+            while(moneyLists == null || moneyLists.size() == 0)
+            {
+                if(retCount++ > retLimit)
+                {
+                    failed = true;
+                    break;
+                }
+                moneyLists = getMoneyListViaNet();
+                Log.d("getDataVia", "retried got money list size : " + moneyLists.size());
+            }
+        }
 
+        if(failed == true)
+        {
+            Log.d("getDataVia","failed!!!");
+            return false;
+        }
+
+        final ArrayList<MoneyList.moneyList> lists = moneyLists;
 
         new Thread(new Runnable() {
             @Override
@@ -405,15 +433,16 @@ public class ExchangeRateManager {
                     @Override
                     public void run() {
                         ListView listView = (ListView)parentActivity.findViewById(R.id.lstCustom);
-                        listView.setAdapter(new ExchangeRateAdapter(parentContext, moneyLists));
+                        listView.setAdapter(new ExchangeRateAdapter(parentContext, lists));
                     }
                 });
             }
         }).start();
 
+        return true;
     }
 
-    private class GetAndShowRateTask extends AsyncTask<Void, Void, Void> {
+    private class GetAndShowRateTask extends AsyncTask<Void, Void, Boolean> {
 
         @Override
         protected void onPreExecute() {
@@ -422,14 +451,19 @@ public class ExchangeRateManager {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
-
-            getDataViaJSOUP();
-            return null;
+        protected Boolean doInBackground(Void... params) {
+            return getDataViaJSOUP();
         }
 
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(Boolean result) {
+
+            if(result == false)
+            {
+                Log.d("post", "called");
+                Toast.makeText(parentContext, parentContext.getString(R.string.TOAST_FAIL_GET_DATA), Toast.LENGTH_LONG).show();
+            }
+
         }
     }
 
