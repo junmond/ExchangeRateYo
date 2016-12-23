@@ -31,7 +31,7 @@ public class adManager {
 
     private static void requestNewInterstitial() {
         AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("2B6940426B300018C2E847CD754FF7BF")
+                //.addTestDevice("2B6940426B300018C2E847CD754FF7BF")
                 .build();
 
         mInterstitialAd.loadAd(adRequest);
@@ -40,7 +40,10 @@ public class adManager {
     public static void showAd(){
         if (mInterstitialAd.isLoaded()) {
             Log.d("adsjun", "loaded");
-            mInterstitialAd.show();
+            double n = (Math.random());
+            Log.d("showAd", "n : " + n);
+            if(n <= 0.25)
+                mInterstitialAd.show();
         }
         else{
             Log.d("adsjun", "not loaded yet...");
